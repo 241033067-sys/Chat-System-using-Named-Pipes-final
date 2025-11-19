@@ -1,0 +1,13 @@
+cd ~
+mkdir -p chat_project
+cd chat_project
+touch chat.txt
+cat > chat.sh << 'EOF'
+tail -f chat.txt &
+while true; do
+  read msg
+  echo "$(date +%H:%M) $msg" >> chat.txt
+done
+EOF
+chmod +x chat.sh
+bash chat.sh
