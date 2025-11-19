@@ -2,17 +2,72 @@ cd ~
 mkdir -p chat_project
 cd chat_project
 touch chat.txt
+
 cat > chat.sh << 'EOF'
-tail -f chat.txt &
+
+CHAT_FILE="chat.txt"
+
+start_chat() {
+  echo "Starting chat... (press Ctrl+C to stop)"
+  tail -f "$CHAT_FILE" &
+  TAIL_PID=$!
+
+  while true; do
+    read msg
+    echo "$(date +%H:%M) $msg" >> "$CHAT_FILE"
+  done
+
+  kill $TAIL_PID
+}
+
+view_chat() {
+  echo "----- Chat History -----"
+  cat "$CHAT_FILE"
+  echo "------------------------"
+}
+
+clear_chat() {
+  echo -n "" > "$CHAT_FILE"
+  echo "Chat cleared!"
+}
+
 while true; do
-  read msg
-  echo "$(date +%H:%M) $msg" >> chat.txt
+  echo
+  echo "========== CHAT MENU =========="
+  echo "1. Start Chat"
+  echo "2. View Chat History"
+  echo "3. Clear Chat"
+  echo "4. Exit"
+  echo "================================"
+  echo -n "Enter your choice: "
+  read choice
+
+  case $choice in
+    1)
+      start_chat
+      ;;
+    2)
+      view_chat
+      ;;
+    3)
+      clear_chat
+      ;;
+    4)
+      echo "Goodbye!"
+      exit 0
+      ;;
+    *)
+      echo "Invalid option. Try again."
+      ;;
+  esac
 done
 EOF
 chmod +x chat.sh
 bash chat.sh
 
 
+
+<img width="419" height="219" alt="Screenshot 2025-11-19 121247" src="https://github.com/user-attachments/assets/94844a0e-d148-4665-b6a2-9ca89a5f67b8" />
 
 
 
